@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hand Cricket Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="container">
+        <h1>Hand Cricket Game</h1>
+        <button id="startMultiplayerButton">Play Multiplayer</button>
+        <button id="startComputerButton">Play Against Computer</button>
+    </div>
+    
+    <div id="multiplayerOptions" style="display: none;">
+        <button id="createRoomButton">Create Room</button>
+        <button id="joinRoomButton">Join Room</button>
+        <button id="backToHome">Back</button>
+    </div>
+    
+    <div id="roomOptions" style="display: none;">
+        <input type="text" id="playerName" placeholder="Enter your name">
+        <input type="text" id="roomCodeInput" placeholder="Enter room code">
+        <button id="startGameButton">Start Game</button>
+        <button id="backToMultiplayer">Back</button>
+    </div>
+    
+    <div id="gameArea" style="display: none;">
+        <div id="timer">Game starts in: 3</div>
+        <div id="scores">
+            <div id="player1Score">Player 1 Score: 0</div>
+            <div id="player2Score">Player 2 Score: 0</div>
+        </div>
+        <div id="runButtons">
+            <button class="runButton" data-run="1">1</button>
+            <button class="runButton" data-run="2">2</button>
+            <button class="runButton" data-run="3">3</button>
+            <button class="runButton" data-run="4">4</button>
+            <button class="runButton" data-run="5">5</button>
+            <button class="runButton" data-run="6">6</button>
+        </div>
+        <button id="backToMultiplayerFromGame">Back</button>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
