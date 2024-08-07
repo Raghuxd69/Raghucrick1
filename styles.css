@@ -9,7 +9,7 @@ body {
     color: #fff;
 }
 
-#container, #multiplayerOptions, #roomOptions, #gameArea {
+#container, #roomOptions, #gameArea {
     text-align: center;
 }
 
