@@ -1,9 +1,7 @@
-import { getDatabase, ref, set, get, update } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
+import { getDatabase, ref, set, get } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js';
 
-// Firebase setup (you need to adjust this to your project)
-import { app } from '../firebase-config.js';
-
-const database = getDatabase(app);
+// Firebase setup
+import { app, database } from '../firebase-config.js';
 
 // DOM elements
 const roomCodeInput = document.getElementById('room-code');
@@ -24,47 +22,49 @@ let roomCode = '';
 let gameStarted = false;
 
 // Create Room
-createRoomBtn.addEventListener('click', () => {
-    roomCode = generateRoomCode();
-    const roomRef = ref(database, `rooms/${roomCode}`);
+createRoomBtn.addEventListener('click', async () => {
+    try {
+        roomCode = generateRoomCode();
+        const roomRef = ref(database, `rooms/${roomCode}`);
 
-    set(roomRef, {
-        player1: null,
-        player2: null,
-        started: false
-    }).then(() => {
+        await set(roomRef, {
+            player1: null,
+            player2: null,
+            started: false
+        });
+
         roomCodeInput.value = roomCode;
         alert(`Room created with code: ${roomCode}`);
-    }).catch(error => {
+    } catch (error) {
         console.error('Error creating room:', error);
-    });
+        alert('Error creating room. Please try again.');
+    }
 });
 
 // Join Room
-joinRoomBtn.addEventListener('click', () => {
+joinRoomBtn.addEventListener('click', async () => {
     roomCode = roomCodeInput.value;
     const roomRef = ref(database, `rooms/${roomCode}`);
 
-    get(roomRef).then(snapshot => {
+    try {
+        const snapshot = await get(roomRef);
         if (snapshot.exists()) {
             const roomData = snapshot.val();
             if (!roomData.started) {
                 const playerKey = roomData.player1 === null ? 'player1' : 'player2';
-                set(ref(database, `rooms/${roomCode}/${playerKey}`), 'active').then(() => {
-                    gameArea.style.display = 'block';
-                    setupGame();
-                }).catch(error => {
-                    console.error('Error joining room:', error);
-                });
+                await set(ref(database, `rooms/${roomCode}/${playerKey}`), 'active');
+                gameArea.style.display = 'block';
+                setupGame();
             } else {
                 alert('Room is already started.');
             }
         } else {
             alert('Invalid room code.');
         }
-    }).catch(error => {
-        console.error('Error fetching room:', error);
-    });
+    } catch (error) {
+        console.error('Error joining room:', error);
+        alert('Error joining room. Please try again.');
+    }
 });
 
 // Setup game
@@ -121,7 +121,7 @@ function playRound(playerChoice) {
 // Update scores in Firebase
 function updateScores(player1Score, player2Score) {
     const roomRef = ref(database, `rooms/${roomCode}`);
-    update(roomRef, {
+    set(roomRef, {
         player1Score: player1Score,
         player2Score: player2Score
     }).catch(error => {
